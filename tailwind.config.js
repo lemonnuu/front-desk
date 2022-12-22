@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    './index.html',
-    './src/**/*.{js,jsx,ts,tsx,vue}',
-  ],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx,vue}'],
   theme: {
     extend: {
       fontSize: {
@@ -16,8 +13,8 @@ module.exports = {
       boxShadow: {
         'l-white': '-10px 0 10px white',
         'l-zinc': '-10px 0 10px #18181b'
-      },
-    },
+      }
+    }
   },
   plugins: []
 }

@@ -6,7 +6,7 @@ import router from './router'
 
 import './styles/index.css'
 
-import {useREM} from './utils/flexible'
+import { useREM } from './utils/flexible'
 import libs from './libs'
 import 'virtual:svg-icons-register'
 

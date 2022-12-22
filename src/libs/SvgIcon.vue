@@ -1,5 +1,5 @@
 <script setup>
-import {computed} from 'vue'
+import { computed } from 'vue'
 
 const props = defineProps({
   name: {
@@ -22,6 +22,4 @@ const symbolId = computed(() => `#icon-${props.name}`)
   </svg>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>
