@@ -3,6 +3,8 @@ import PopOver from '@/libs/PopOver.vue'
 import SvgIcon from '../../../../libs/SvgIcon.vue'
 
 import { THEME_LIGHT, THEME_DARK, THEME_SYSTEM } from '@/constants'
+import { useThemeStore } from '../../../../stores/theme'
+import { computed } from 'vue'
 
 const themeArr = [
   {
@@ -24,6 +26,19 @@ const themeArr = [
     name: '跟随系统'
   }
 ]
+
+/**
+ * 1. 监听主题的切换行为
+ * 2. 根据行为保存当前需要展示的主题到 pinia
+ * 3. 根据 pinia 中保存的当前主题, 展示 header-theme 下的显式图标
+ * 4. 根据 pinia 中保存的当前主题, 修改 html 的 class
+ */
+const themeStore = useThemeStore()
+const onHandleClickThemeItem = (themeType) => themeStore.changeTheme(themeType)
+// 根据主题展示图标
+const svgThemeIconName = computed(() => {
+  return themeArr.find((item) => item.type === themeStore.themeType).icon
+})
 </script>
 
 <template>
@@ -31,9 +46,9 @@ const themeArr = [
     <!-- 具名插槽：触发弹层的视图 -->
     <template #reference>
       <svg-icon
-        name="theme-light"
-        class="w-2 h-2 cursor-pointer rounded-sm duration-200 outline-none hover:bg-zinc-100/60"
-        fill-class="fill-zinc-900"
+        :name="svgThemeIconName"
+        class="w-2 h-2 cursor-pointer rounded-sm duration-200 outline-none hover:bg-zinc-100/60 dark:hover:bg-zinc-900"
+        fill-class="fill-zinc-900 dark:fill-zinc-300"
       ></svg-icon>
     </template>
     <!-- 匿名插槽：弹出层视图中展示的内容 -->
@@ -41,10 +56,15 @@ const themeArr = [
       <div
         v-for="item in themeArr"
         :key="item.id"
-        class="flex items-center p-1 cursor-pointer rounded hover:bg-zinc-100/60"
+        @click="onHandleClickThemeItem(item.type)"
+        class="flex items-center p-1 cursor-pointer rounded hover:bg-zinc-100/60 dark:hover:bg-zinc-800"
       >
-        <svg-icon :name="item.icon" class="w-1.5 h-1.5 mr-1" fill-class="fill-zinc-900"></svg-icon>
-        <span class="text-zinc-900 text-sm">{{ item.name }}</span>
+        <svg-icon
+          :name="item.icon"
+          class="w-1.5 h-1.5 mr-1"
+          fill-class="fill-zinc-900 dark:fill-zinc-300"
+        ></svg-icon>
+        <span class="text-zinc-900 text-sm dark:text-zinc-300">{{ item.name }}</span>
       </div>
     </div>
   </pop-over>

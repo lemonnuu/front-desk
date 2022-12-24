@@ -4,13 +4,9 @@ import { useScroll } from '@vueuse/core'
 import SvgIcon from '@/libs/SvgIcon.vue'
 import PopUp from '@/libs/PopUp.vue'
 import MenuView from '../menu/MenuView.vue'
+import { useCategoryStore } from '@/stores/category'
 
-defineProps({
-  categoryList: {
-    type: Array,
-    required: true
-  }
-})
+const categoryStore = useCategoryStore()
 
 // 滑块样式
 const sliderStyle = ref({
@@ -56,26 +52,23 @@ const onHandleMenuClickItem = (index) => {
 </script>
 
 <template>
-  <div class="bg-white sticky top-0 left-0 z-10">
-    <ul
-      ref="ulTarget"
-      class="relative flex overflow-x-auto p-1 text-xs text-zinc-600"
-    >
+  <div class="bg-white dark:bg-zinc-900 sticky top-0 left-0 z-10 duration-500">
+    <ul ref="ulTarget" class="relative flex overflow-x-auto p-1 text-xs text-zinc-600">
       <!-- 滑块 -->
       <li
         ref="sliderTarget"
         :style="sliderStyle"
-        class="absolute h-[22px] bg-zinc-900 rounded-lg duration-200"
+        class="absolute h-[22px] bg-zinc-900 rounded-lg duration-200 dark:bg-zinc-800"
       ></li>
       <!-- 汉堡按钮 -->
       <li
         @click="handlePopUpShow"
-        class="fixed top-0 right-[-1px] h-4 px-1 flex items-center bg-white z-20 shadow-l-white"
+        class="fixed top-0 right-[-1px] h-4 px-1 flex items-center bg-white z-20 shadow-l-white dark:bg-zinc-900 dark:shadow-l-zinc"
       >
         <svg-icon name="hamburger" class="w-1.5 h-1.5"></svg-icon>
       </li>
       <li
-        v-for="(item, index) in categoryList"
+        v-for="(item, index) in categoryStore.categoryList"
         :key="item.id"
         :ref="setItemRef"
         @click="onItemClick(index)"
@@ -87,10 +80,7 @@ const onHandleMenuClickItem = (index) => {
     </ul>
   </div>
   <pop-up v-model="isPopUpShow">
-    <menu-view
-      :categoryList="categoryList"
-      @onHandleMenuClickItem="onHandleMenuClickItem"
-    />
+    <menu-view @onHandleMenuClickItem="onHandleMenuClickItem" />
   </pop-up>
 </template>
 

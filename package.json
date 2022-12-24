@@ -12,6 +12,7 @@
     "@vueuse/core": "^9.8.2",
     "axios": "^1.2.1",
     "pinia": "^2.0.28",
+    "pinia-plugin-persist": "^1.0.0",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "^3.2.45",
     "vue-router": "^4.1.6"

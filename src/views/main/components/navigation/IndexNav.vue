@@ -1,21 +1,16 @@
 <script setup>
-import { ref } from 'vue'
 import MobileNav from './MobileNav.vue'
+import PCNav from './PCNav.vue'
 import { isMobileTerminal } from '@/utils/flexible'
-import { getCategory } from '@/api/category'
-import { ALL_CATEGORY_ITEM } from '@/constants'
+import { useCategoryStore } from '@/stores/category'
 
-const categoryList = ref([])
-const getAllCategory = async () => {
-  const { category } = await getCategory()
-  categoryList.value = category
-  categoryList.value.unshift(ALL_CATEGORY_ITEM)
-}
-getAllCategory()
+const categoryStore = useCategoryStore()
+categoryStore.getCategoryList()
 </script>
 
 <template>
-  <MobileNav v-if="isMobileTerminal" :categoryList="categoryList"></MobileNav>
+  <MobileNav v-if="isMobileTerminal"></MobileNav>
+  <PCNav v-else></PCNav>
 </template>
 
 <style scoped lang="scss"></style>
