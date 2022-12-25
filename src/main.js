@@ -9,6 +9,7 @@ import './styles/index.css'
 
 import { useREM } from './utils/flexible'
 import useTheme from './utils/theme'
+import directives from './directives'
 import libs from './libs'
 import 'virtual:svg-icons-register'
 
@@ -19,6 +20,7 @@ const app = createApp(App)
 app.use(createPinia().use(piniaPersist))
 app.use(router)
 app.use(libs)
+app.use(directives)
 
 useTheme()
 

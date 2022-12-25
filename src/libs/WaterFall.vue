@@ -40,6 +40,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['onRenderFinished'])
+
 // 容器的总高度 = 最高的这一列的高度
 const containerHeight = ref(0)
 // 记录每列高度的容器 key: 所在列 val: 列高
@@ -99,10 +101,11 @@ let itemHeights = []
  * 监听图片加载完成 (需要图片预加载)
  */
 const waitImgComplate = () => {
+  console.log('图片没有宽高, 需要计算')
   itemHeights = []
   // 拿到所有的元素
   let itemElements = [...document.getElementsByClassName('m-waterfall-item')]
-  // 获取到元素的 img 标签
+  // 获取到未定位元素的 img 标签
   const imgElements = getImgElements(itemElements)
   // 等待图片加载完成
   onComplateImgElements(imgElements).then(() => {
@@ -110,7 +113,7 @@ const waitImgComplate = () => {
     itemElements.forEach((el) => {
       itemHeights.push(el.offsetHeight)
     })
-    console.log(itemHeights)
+    console.log('itemHeights', itemHeights)
     // 渲染位置
     useItemLocation()
   })
@@ -120,6 +123,7 @@ const waitImgComplate = () => {
  * 不需要图片预加载
  */
 const useItemHeight = () => {
+  console.log('图片有宽高')
   itemHeights = []
   // 拿到所有的元素
   let itemElements = [...document.getElementsByClassName('m-waterfall-item')]
@@ -150,6 +154,7 @@ const useItemLocation = () => {
   })
   // 指定容器的高度
   containerHeight.value = getMaxHeight(columnHeightObj.value)
+  emit('onRenderFinished')
 }
 
 /**
@@ -200,6 +205,7 @@ watch(
         // 构建高度记录容器
         initColumnHeightObj()
       }
+      console.log('应该不会变', props.picturePreReading)
       if (props.picturePreReading) {
         waitImgComplate()
       } else {
@@ -221,10 +227,8 @@ const reset = () => {
     // 重新计算列宽
     useColumnWidth()
     // 重置所有的定位数据
-    props.data.forEach((item) => {
-      item._style = null
-    })
-  }, 100)
+    props.data.forEach((item) => (item._style = null))
+  }, 200)
 }
 
 /**
@@ -241,7 +245,7 @@ watch(
         reset()
       })
     } else {
-      console.log('直接 rest')
+      console.log('直接 reset')
       reset()
     }
   }
@@ -264,8 +268,10 @@ watch(
         class="m-waterfall-item absolute duration-300"
         :style="{
           width: columnWidth + 'px',
-          left: item._style?.left + 'px',
-          top: item._style?.top + 'px'
+          left: item._style ? item._style?.left + 'px' : getItemLeft() + 'px',
+          top: item._style ? item._style?.top + 'px' : getItemTop() + 'px'
+          // left: item._style?.left + 'px',
+          // top: item._style?.top + 'px'
         }"
       >
         <slot :item="item" :width="columnWidth" :index="index"></slot>

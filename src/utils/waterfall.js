@@ -23,19 +23,18 @@ export const onComplateImgElements = (imgElements) => {
   imgElements.forEach((imgEle, index) => {
     promiseAll[index] = new Promise((resolve, reject) => {
       const src = imgEle.src
+      const resInfo = { src, index }
+      if (imgEle.onload) {
+        console.log('已经注册过渲染事件')
+        return resolve(resInfo)
+      }
       imgEle.onload = () => {
         console.log('加载完成', index, src)
-        resolve({
-          src,
-          index
-        })
+        resolve(resInfo)
       }
       imgEle.onerror = () => {
         console.log('加载失败', index, src)
-        reject({
-          src,
-          index
-        })
+        reject(resInfo)
       }
     })
   })

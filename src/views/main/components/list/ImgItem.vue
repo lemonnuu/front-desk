@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import ComBtn from '../../../../libs/ComBtn.vue'
+import ComBtn from '@/libs/ComBtn.vue'
+import { randomRGB } from '@/utils/color'
 
 const props = defineProps({
   data: {
@@ -10,6 +11,11 @@ const props = defineProps({
   width: {
     type: Number,
     default: 0
+  },
+  // 得用它控制图片是否懒加载, 如果得计算宽高就不能懒加载
+  isPicturePreReading: {
+    type: Boolean,
+    default: true
   }
 })
 
@@ -24,9 +30,15 @@ const imgStyle = computed(() => {
 
 <template>
   <div class="bg-white dark:bg-zinc-900 xl:dark:bg-zinc-800 rounded pb-1">
-    <div class="relative w-full rounded cursor-zoom-in group">
+    <div
+      class="relative w-full rounded cursor-zoom-in group"
+      :style="{
+        backgroundColor: randomRGB()
+      }"
+    >
       <!-- 图片 -->
       <img
+        v-lazy="isPicturePreReading"
         class="w-full rounded bg-transparent m-waterfall-item-img"
         :src="data.photo"
         :style="imgStyle"
@@ -67,7 +79,7 @@ const imgStyle = computed(() => {
     <p class="text-sm mt-1 font-bold text-zinc-900 dark:text-zinc-300 px-1">{{ data.title }}</p>
     <!-- 作者 -->
     <div class="flex items-center mt-1 px-1">
-      <img class="h-2 w-2 rounded-full" :src="data.avatar" alt="" />
+      <img v-lazy class="h-2 w-2 rounded-full" :src="data.avatar" alt="" />
       <span class="text-sm text-zinc-500 ml-1">{{ data.author }}</span>
     </div>
   </div>
