@@ -7,7 +7,9 @@ import FloatingView from './components/FloatingView.vue'
 <template>
   <div class="h-screen">
     <header-view class="h-header"></header-view>
-    <main-view class="h-main"></main-view>
+    <div class="h-main">
+      <main-view></main-view>
+    </div>
     <floating-view></floating-view>
   </div>
 </template>

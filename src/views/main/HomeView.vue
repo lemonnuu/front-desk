@@ -1,9 +1,15 @@
 <script setup>
+import ImgList from './components/list/ImgList.vue'
 import IndexNav from './components/navigation/IndexNav.vue'
 </script>
 
 <template>
-  <IndexNav />
+  <div class="h-full overflow-auto bg-white dark:bg-zinc-800 duration-500">
+    <IndexNav />
+    <div class="max-w-screen-xl mx-auto relative m-1 xl:mt-4">
+      <ImgList></ImgList>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss"></style>

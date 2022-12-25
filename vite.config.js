@@ -2,12 +2,12 @@ import { fileURLToPath, URL } from 'node:url'
 import path from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import {createSvgIconsPlugin} from 'vite-plugin-svg-icons'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(), 
+    vue(),
     createSvgIconsPlugin({
       // 指定需要缓存的图标文件夹
       iconDirs: [path.resolve(process.cwd(), 'src/assets/icons')],
@@ -25,6 +25,12 @@ export default defineConfig({
       '/api': {
         target: 'https://www.fastmock.site/mock/f4f4ee7dc2f219848cbddc33ac4ea3cb/front-desk',
         changeOrigin: true
+      },
+      // imgapi 调用接口
+      '/imgapi': {
+        target: 'https://imgapi.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/imgapi/, '')
       }
     }
   }
