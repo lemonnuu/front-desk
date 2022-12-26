@@ -1,10 +1,20 @@
 <script setup>
-import { computed, ref } from 'vue'
-import { getImgApiCosWithWH, getImgApiCosNoWH } from '../../../../api/imgs'
+import { computed, onMounted, ref, watch } from 'vue'
+import {
+  getImgApiLsit,
+  getImgApiCosWithWH,
+  getImgApiCosNoWH,
+  getBingImgList,
+  getLoadingImg
+} from '../../../../api/imgs'
 import WaterFall from '../../../../libs/WaterFall.vue'
 import ImgItem from './ImgItem.vue'
 import { isMobileTerminal } from '../../../../utils/flexible'
 import InfiniteList from '../../../../libs/InfiniteList.vue'
+import { useApiStore } from '../../../../stores/api'
+import { CATEGORY } from '../../../../constants'
+
+const apiStore = useApiStore()
 
 // 数据是否在加载中
 const loading = ref(false)
@@ -16,13 +26,30 @@ const imgList = ref([])
 const getImgList = async () => {
   // 数据全部加载完成直接 return
   if (isFinished.value) return
-
   console.log('开始请求图片数据')
 
-  // const random = Math.floor(Math.random() * 50)
-  // console.log('随机个数图片', random)
-  // const res = await getImgApiCosWithWH(10)
-  const res = (await getImgApiCosNoWH()) || (await getImgApiCosWithWH(10))
+  let res = []
+  switch (apiStore.currentCategory.id) {
+    case CATEGORY.COS:
+      res = (await getCosListWithWH()) || (await getCosListNoWH())
+      break
+    case CATEGORY.BEAUTY:
+      res = await getParamsImgList()
+      break
+    case CATEGORY.CARTOON:
+      res = await getParamsImgList()
+      break
+    case CATEGORY.LANDSCAPE:
+      res = await getParamsImgList()
+      break
+    case CATEGORY.BING:
+      res = await getBingImgList()
+      isFinished.value = true
+      break
+    default:
+      res = await getParamsImgList()
+      break
+  }
   imgList.value.push(...res)
 
   // 由于这里没有真正的分页, 也就没有 total, 数据不会到头
@@ -36,14 +63,63 @@ const getImgList = async () => {
   console.log(res)
 }
 
+const params = {
+  fl: 'suiji'
+}
+
+// 获取 真人 | 动漫 | 风景 图片
+const getParamsImgList = async () => {
+  return await getImgApiLsit(params, 10)
+}
+
+// 获取有宽高值的 Cos 图片列表
+const getCosListWithWH = async () => {
+  return await getImgApiCosWithWH(10)
+}
+
+// 获取没有宽高值的 Cos 图片列表
+const getCosListNoWH = async () => {
+  return await getImgApiCosNoWH()
+}
+
 const isPicturePreReading = computed(() => {
   return !imgList.value[0] || !imgList.value[0].photoWidth || !imgList.value[0].photoHeight
-  // return !imgList.value.every((item) => item.photoWidth && item.photoHeight)
 })
 
 const onRenderFinished = () => {
   loading.value = false
 }
+
+/**
+ * 此方法根据 category 发送不同的请求
+ */
+const resetImgList = () => {
+  // 重置数据
+  isFinished.value = false
+  imgList.value = []
+  switch (apiStore.currentCategory.id) {
+    case CATEGORY.BEAUTY:
+      params.fl = 'meizi'
+      break
+    case CATEGORY.CARTOON:
+      params.fl = 'dongman'
+      break
+    case CATEGORY.LANDSCAPE:
+      params.fl = 'fengjing'
+      break
+    default:
+      params.fl = 'suiji'
+      break
+  }
+}
+
+/**
+ * 监听 currentCategory 的变化
+ */
+watch(
+  () => apiStore.currentCategory,
+  () => resetImgList()
+)
 </script>
 
 <template>

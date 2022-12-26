@@ -278,7 +278,13 @@ watch(
       </div>
     </template>
     <!-- 加载中 -->
-    <div v-else>加载中...</div>
+    <template v-else>
+      <div class="flex flex-col items-center">
+        <!-- <img class="w-1/3 rounded" src="https://imgapi.cn/loading/21.gif" alt="" /> -->
+        <img src="https://counter.likepoems.com/get/@:loading" alt=":loading" />
+        <p class="text-sm mt-1 font-bold text-zinc-900 dark:text-zinc-300 px-1">拼命加载中...</p>
+      </div>
+    </template>
   </div>
 </template>
 

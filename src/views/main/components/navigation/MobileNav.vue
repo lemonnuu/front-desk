@@ -5,17 +5,16 @@ import SvgIcon from '@/libs/SvgIcon.vue'
 import PopUp from '@/libs/PopUp.vue'
 import MenuView from '../menu/MenuView.vue'
 import { useCategoryStore } from '@/stores/category'
+import { useApiStore } from '../../../../stores/api'
 
 const categoryStore = useCategoryStore()
+const apiStore = useApiStore()
 
 // 滑块样式
 const sliderStyle = ref({
   transform: 'translateX(0px)',
   width: '52px'
 })
-
-// navigation 选中的下标
-const currentCategoryIndex = ref(0)
 
 // 获取所有的 item 元素
 let itemRefs = []
@@ -26,16 +25,22 @@ onBeforeUpdate(() => {
 
 const ulTarget = ref()
 const { x: ulScrollLeft } = useScroll(ulTarget)
-watch(currentCategoryIndex, (val) => {
-  const { left, width } = itemRefs[val].getBoundingClientRect()
-  sliderStyle.value = {
-    transform: `translateX(${ulScrollLeft.value + left - 10}px)`,
-    width: width + 'px'
+watch(
+  () => apiStore.currentCategoryIndex,
+  (val) => {
+    const { left, width } = itemRefs[val].getBoundingClientRect()
+    sliderStyle.value = {
+      transform: `translateX(${ulScrollLeft.value + left - 10}px)`,
+      width: width + 'px'
+    }
+  },
+  {
+    flush: 'post'
   }
-})
+)
 
-const onItemClick = (index) => {
-  currentCategoryIndex.value = index
+const onItemClick = (item) => {
+  apiStore.changeCurrentCategory(item)
 }
 
 // popup 是否显式
@@ -45,8 +50,8 @@ const handlePopUpShow = () => {
   isPopUpShow.value = true
 }
 
-const onHandleMenuClickItem = (index) => {
-  currentCategoryIndex.value = index
+const onHandleMenuClickItem = (item) => {
+  apiStore.changeCurrentCategory(item)
   isPopUpShow.value = false
 }
 </script>
@@ -71,8 +76,8 @@ const onHandleMenuClickItem = (index) => {
         v-for="(item, index) in categoryStore.categoryList"
         :key="item.id"
         :ref="setItemRef"
-        @click="onItemClick(index)"
-        :class="{ 'text-zinc-100': currentCategoryIndex === index }"
+        @click="onItemClick(item)"
+        :class="{ 'text-zinc-100': apiStore.currentCategoryIndex === index }"
         class="shrink-0 px-1.5 py-0.5 z-10 duration-200 last:mr-2"
       >
         {{ item.name }}

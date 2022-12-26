@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useCategoryStore } from '@/stores/category'
+import { useApiStore } from '../../../../stores/api'
 
 const categoryStore = useCategoryStore()
+const apiStore = useApiStore()
 
 const isOpenCategory = ref(false)
 const triggerState = () => {
@@ -10,11 +12,8 @@ const triggerState = () => {
   isOpenCategory.value = !isOpenCategory.value
 }
 
-// 当前选中状态
-const currentCategoryIndex = ref(0)
-
-const onHandleClickItem = (index) => {
-  currentCategoryIndex.value = index
+const onHandleClickItem = (item) => {
+  apiStore.changeCurrentCategory(item)
 }
 </script>
 
@@ -39,11 +38,11 @@ const onHandleClickItem = (index) => {
       <li
         v-for="(item, index) in categoryStore.categoryList"
         :key="item.id"
-        @click="onHandleClickItem(index)"
+        @click="onHandleClickItem(item)"
         class="shrink-0 px-1.5 py-0 z-10 duration-200 last:mr-4 text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-300 text-base font-bold h-4 leading-4 cursor-pointer hover:bg-zinc-200 dark:hover:bg-zinc-900 rounded mr-1 mb-1"
         :class="{
           'text-zinc-900 dark:text-zinc-300 bg-zinc-200 dark:bg-zinc-900':
-            currentCategoryIndex === index
+            apiStore.currentCategoryIndex === index
         }"
       >
         {{ item.name }}

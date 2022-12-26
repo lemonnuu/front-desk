@@ -31,6 +31,11 @@ export default defineConfig({
         target: 'https://imgapi.cn',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/imgapi/, '')
+      },
+      '/likepoems': {
+        target: 'https://api.likepoems.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/likepoems/, '')
       }
     }
   }
