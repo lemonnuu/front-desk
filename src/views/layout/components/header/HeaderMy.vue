@@ -25,7 +25,7 @@ const menuArr = [
 </script>
 
 <template>
-  <pop-over class="flex items-center" placement="bottom-left">
+  <pop-over class="guide-my flex items-center" placement="bottom-left">
     <template #reference>
       <div
         class="relative flex items-center p-0.5 rounded-sm cursor-pointer duration-200 outline-none hover:bg-zinc-100 dark:hover:bg-zinc-900"

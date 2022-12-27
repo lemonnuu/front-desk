@@ -24,7 +24,7 @@ const onHandleSearch = (item) => {
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="w-full guide-search">
     <SearchBar v-model="inputValue" @search="onHandleSearch">
       <template #dropdown>
         <div>

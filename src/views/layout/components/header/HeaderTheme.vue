@@ -42,7 +42,7 @@ const svgThemeIconName = computed(() => {
 </script>
 
 <template>
-  <pop-over placement="bottom-left">
+  <pop-over placement="bottom-left" class="guide-theme">
     <!-- 具名插槽：触发弹层的视图 -->
     <template #reference>
       <svg-icon

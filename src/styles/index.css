@@ -2,3 +2,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+}
+
+/* driver 引导白色遮住修复 */
+.driver-fix-stacking {
+  position: relative;
+}
+
+/* driver 引导按钮对齐修复 */
+.driver-navigation-btns {
+  line-height: 0;
+}

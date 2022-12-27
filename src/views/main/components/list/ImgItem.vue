@@ -1,7 +1,11 @@
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import ComBtn from '@/libs/ComBtn.vue'
 import { randomRGB } from '@/utils/color'
+import { transformImgfromSrc, downloadResource } from '../../../../utils/download'
+import { message } from '../../../../libs'
+import { saveAs } from 'file-saver'
+import { useFullscreen } from '@vueuse/core'
 
 const props = defineProps({
   data: {
@@ -26,6 +30,32 @@ const imgStyle = computed(() => {
     return {}
   }
 })
+
+const imgElement = ref(null)
+
+/**
+ * 下载按钮点击事件
+ */
+const onHandleDownload = async () => {
+  const tempArr = props.data.photo.split('.')
+  const suffix = tempArr[tempArr.length - 1]
+  if (saveAs) {
+    // 可以使用 file-saver 库, 和下面自己写的是一样的原理, 也不支持跨域的图片
+    saveAs(imgElement.value.src, `${props.data.title}.${suffix}`)
+  } else {
+    // 只有每日 bing 图可以下载, 其它的跨域了, 就这样吧, 到时候可能还得开发个服务器, 唉, 到时候再说
+    const blobUrl = await transformImgfromSrc(imgElement.value.src).catch((err) => {
+      message('error', '图片跨域了, 请右键图片另存为...', 2000)
+      console.log(err)
+    })
+    blobUrl && downloadResource(blobUrl, `${props.data.title}.${suffix}`)
+  }
+}
+
+/**
+ * 全屏
+ */
+const { enter: onImgFullScreen } = useFullscreen(imgElement)
 </script>
 
 <template>
@@ -38,6 +68,7 @@ const imgStyle = computed(() => {
     >
       <!-- 图片 -->
       <img
+        ref="imgElement"
         v-lazy="isPicturePreReading"
         class="w-full rounded bg-transparent m-waterfall-item-img"
         :src="data.photo"
@@ -63,6 +94,7 @@ const imgStyle = computed(() => {
           type="info"
           size="small"
           icon="download"
+          @click="onHandleDownload"
           icon-class="fill-zinc-900 dark:fill-zinc-200"
         ></ComBtn>
         <!-- 全屏 -->
@@ -72,6 +104,7 @@ const imgStyle = computed(() => {
           size="small"
           icon="full"
           icon-class="fill-zinc-900 dark:fill-zinc-200"
+          @click="onImgFullScreen"
         ></ComBtn>
       </div>
     </div>

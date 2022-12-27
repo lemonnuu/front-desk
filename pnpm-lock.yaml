@@ -7,13 +7,16 @@ specifiers:
   '@vueuse/core': ^9.8.2
   autoprefixer: ^10.4.13
   axios: ^1.2.1
+  driver.js: ^0.9.8
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
+  file-saver: ^2.0.5
   pinia: ^2.0.28
   pinia-plugin-persist: ^1.0.0
   postcss: ^8.4.20
   prettier: ^2.7.1
   sass: ^1.57.1
+  tailwind-scrollbar: ^2.0.1
   tailwindcss: ^3.2.4
   vite: ^4.0.0
   vite-plugin-svg-icons: ^2.0.1
@@ -23,6 +26,8 @@ specifiers:
 dependencies:
   '@vueuse/core': 9.8.2_vue@3.2.45
   axios: 1.2.1
+  driver.js: 0.9.8
+  file-saver: 2.0.5
   pinia: 2.0.28_vue@3.2.45
   pinia-plugin-persist: 1.0.0_pinia@2.0.28+vue@3.2.45
   vite-plugin-svg-icons: 2.0.1_vite@4.0.2
@@ -39,6 +44,7 @@ devDependencies:
   postcss: 8.4.20
   prettier: 2.8.1
   sass: 1.57.1
+  tailwind-scrollbar: 2.0.1_tailwindcss@3.2.4
   tailwindcss: 3.2.4_postcss@8.4.20
   vite: 4.0.2_sass@1.57.1
 
@@ -978,6 +984,10 @@ packages:
       domhandler: 4.3.1
     dev: false
 
+  /driver.js/0.9.8:
+    resolution: {integrity: sha512-bczjyKdX6XmFyCDkwtRmlaORDwfBk1xXmRO0CAe5VwNQTM98aWaG2LAIiIdTe53iV/B7W5lXlIy2xYtf0JRb7Q==}
+    dev: false
+
   /electron-to-chromium/1.4.284:
     resolution: {integrity: sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==}
     dev: true
@@ -1285,6 +1295,10 @@ packages:
     dependencies:
       flat-cache: 3.0.4
     dev: true
+
+  /file-saver/2.0.5:
+    resolution: {integrity: sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==}
+    dev: false
 
   /fill-range/4.0.0:
     resolution: {integrity: sha512-VcpLTWqWDiTerugjj8e3+esbg+skS3M9e54UuR3iCeIDMXCLTsAH8hTSzDQU/X6/6t3eYkOKoZSef2PlU6U1XQ==}
@@ -2543,6 +2557,15 @@ packages:
       picocolors: 1.0.0
       stable: 0.1.8
     dev: false
+
+  /tailwind-scrollbar/2.0.1_tailwindcss@3.2.4:
+    resolution: {integrity: sha512-OcR7qHBbux4k+k6bWqnEQFYFooLK/F4dhkBz6nvswIoaA9ancZ5h20e0tyV7ifSWLDCUBtpG+1NHRA8HMRH/wg==}
+    engines: {node: '>=12.13.0'}
+    peerDependencies:
+      tailwindcss: 3.x
+    dependencies:
+      tailwindcss: 3.2.4_postcss@8.4.20
+    dev: true
 
   /tailwindcss/3.2.4_postcss@8.4.20:
     resolution: {integrity: sha512-AhwtHCKMtR71JgeYDaswmZXhPcW9iuI9Sp2LvZPo9upDZ7231ZJ7eA9RaURbhpXGVlrjX4cFNlB4ieTetEb7hQ==}
