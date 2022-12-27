@@ -3,7 +3,7 @@ import axios from 'axios'
 // 默认的 axios
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
-  timeout: 5000
+  timeout: 10000
 })
 
 service.interceptors.response.use((response) => {
@@ -31,6 +31,16 @@ export const likepoemsService = axios.create({
   baseURL: '/likepoems'
 })
 likepoemsService.interceptors.response.use((response) => {
+  return response.data
+})
+
+/**
+ * 测试一下
+ */
+export const usuuuService = axios.create({
+  baseURL: '/usuuu'
+})
+usuuuService.interceptors.response.use((response) => {
   return response.data
 })
 

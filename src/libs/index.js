@@ -1,5 +1,6 @@
 import { toKebabCase } from '../utils/flexible'
 import { defineAsyncComponent } from 'vue'
+export { confirm } from '../utils/confirm'
 
 export default {
   install(app) {

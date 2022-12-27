@@ -36,6 +36,11 @@ export default defineConfig({
         target: 'https://api.likepoems.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/likepoems/, '')
+      },
+      '/usuuu': {
+        target: 'https://api.usuuu.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/usuuu/, '')
       }
     }
   }

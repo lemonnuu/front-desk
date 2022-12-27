@@ -1,20 +1,22 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import {
   getImgApiLsit,
   getImgApiCosWithWH,
   getImgApiCosNoWH,
   getBingImgList,
-  getLoadingImg
+  getQQInfo
 } from '../../../../api/imgs'
 import WaterFall from '../../../../libs/WaterFall.vue'
 import ImgItem from './ImgItem.vue'
 import { isMobileTerminal } from '../../../../utils/flexible'
 import InfiniteList from '../../../../libs/InfiniteList.vue'
 import { useApiStore } from '../../../../stores/api'
+import { useSearchTextStore } from '../../../../stores/searchText'
 import { CATEGORY } from '../../../../constants'
 
 const apiStore = useApiStore()
+const searchTextStore = useSearchTextStore()
 
 // 数据是否在加载中
 const loading = ref(false)
@@ -28,10 +30,15 @@ const getImgList = async () => {
   if (isFinished.value) return
   console.log('开始请求图片数据')
 
+  // 搜索模式
+  if (searchMode) {
+    return searchModeFunc()
+  }
+
   let res = []
   switch (apiStore.currentCategory.id) {
     case CATEGORY.COS:
-      res = (await getCosListWithWH()) || (await getCosListNoWH())
+      res = (await getCosListNoWH()) || (await getCosListWithWH())
       break
     case CATEGORY.BEAUTY:
       res = await getParamsImgList()
@@ -97,6 +104,7 @@ const resetImgList = () => {
   // 重置数据
   isFinished.value = false
   imgList.value = []
+  currentSearchCount = ''
   switch (apiStore.currentCategory.id) {
     case CATEGORY.BEAUTY:
       params.fl = 'meizi'
@@ -118,7 +126,45 @@ const resetImgList = () => {
  */
 watch(
   () => apiStore.currentCategory,
-  () => resetImgList()
+  () => {
+    searchMode = false
+    searchTextStore.changeSearchText('')
+    resetImgList()
+  }
+)
+
+let searchMode = false
+
+let currentSearchCount = ''
+const searchModeFunc = async () => {
+  if (!currentSearchCount) {
+    currentSearchCount = searchTextStore.searchText
+  }
+  // 这个接口也会返回头像, 但是好模糊, 不用它的
+  const { name } = (await getQQInfo(currentSearchCount)).data
+  const url = `https://imgapi.cn/qq.php?qq=${currentSearchCount}`
+  const res = {
+    id: url,
+    photo: url,
+    title: name,
+    author: currentSearchCount,
+    avatar: url
+  }
+  currentSearchCount = parseInt(currentSearchCount) - 1
+  imgList.value.push(res)
+  console.log('搜索模式', typeof res)
+}
+
+/**
+ * 监听 searchText 的变化
+ */
+watch(
+  () => searchTextStore.searchText,
+  (val) => {
+    searchMode = val ? true : false
+    console.log('监听搜索', val)
+    resetImgList()
+  }
 )
 </script>
 

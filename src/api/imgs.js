@@ -1,6 +1,5 @@
-import { imgApiService, likepoemsService } from '../utils/request'
+import { imgApiService, likepoemsService, usuuuService } from '../utils/request'
 import randomName from '../utils/randomName'
-import { templateRef } from '@vueuse/core'
 
 /**
  * 获取一张真人/动漫/风景调用
@@ -30,6 +29,19 @@ const getDujitang = () => {
       type: 'json'
     }
   })
+}
+
+/**
+ * 模拟搜索文本提示
+ */
+export const getSearchHint = async () => {
+  console.log('搜索提示接口触发')
+  const sentenceListPromiseArr = []
+  const randomCount = Math.floor(Math.random() * 7) + 1
+  for (let i = 0; i < randomCount; i++) {
+    sentenceListPromiseArr.push(getDujitang())
+  }
+  return await Promise.all(sentenceListPromiseArr)
 }
 
 const zdArr = ['mobile', 'pc']
@@ -141,7 +153,6 @@ export const getBingImgList = async () => {
     const time = arr[3].split('time:')[1].replace('}', '')
     const temp = url.split('_')
     const widthAndHeight = temp[temp.length - 1].split('.')[0].split('x')
-    console.log(arr, title, url, time)
     return {
       id: time + index + Date.now(),
       photo: url,
@@ -170,4 +181,13 @@ export const getLoadingImg = async () => {
     photoWidth: width,
     photoHeight: height
   }
+}
+
+/**
+ * 获取 QQ 信息
+ */
+export const getQQInfo = async (qq) => {
+  return await usuuuService({
+    url: `/qq/${qq}`
+  })
 }
