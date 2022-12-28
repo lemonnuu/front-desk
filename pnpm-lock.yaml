@@ -11,6 +11,7 @@ specifiers:
   eslint: ^8.22.0
   eslint-plugin-vue: ^9.3.0
   file-saver: ^2.0.5
+  gsap: ^3.11.4
   pinia: ^2.0.28
   pinia-plugin-persist: ^1.0.0
   postcss: ^8.4.20
@@ -28,6 +29,7 @@ dependencies:
   axios: 1.2.1
   driver.js: 0.9.8
   file-saver: 2.0.5
+  gsap: 3.11.4
   pinia: 2.0.28_vue@3.2.45
   pinia-plugin-persist: 1.0.0_pinia@2.0.28+vue@3.2.45
   vite-plugin-svg-icons: 2.0.1_vite@4.0.2
@@ -1437,6 +1439,10 @@ packages:
   /grapheme-splitter/1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
     dev: true
+
+  /gsap/3.11.4:
+    resolution: {integrity: sha512-McHhEguHyExMMnjqKA8G+7TvxmlKQGMbjgwAilnFe1e4id7V/tFveRQ2YMZhTYu0oxHGWvbPltdVYQOu3z1SCA==}
+    dev: false
 
   /has-ansi/2.0.0:
     resolution: {integrity: sha512-C8vBJ8DwUCx19vhm7urhTuUsr4/IyP6l4VzNQDv+ryHQObW3TTTp9yB68WpYgRe2bbaGuZ/se74IqFeVnMnLZg==}

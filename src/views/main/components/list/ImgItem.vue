@@ -23,6 +23,8 @@ const props = defineProps({
   }
 })
 
+const emit = defineEmits(['click'])
+
 const imgStyle = computed(() => {
   if (props.data.photoWidth && props.data.photoHeight) {
     return { height: (props.width / props.data.photoWidth) * props.data.photoHeight + 'px' }
@@ -56,6 +58,32 @@ const onHandleDownload = async () => {
  * 全屏
  */
 const { enter: onImgFullScreen } = useFullscreen(imgElement)
+
+/**
+ * Pins 跳转记录, 记录图片的中心点 (X | Y 位置 + 宽 | 高 一半)
+ */
+const imgContainerCenter = () => {
+  const {
+    x: imgContainerX,
+    y: imgContainerY,
+    width: imgContainerWidth,
+    height: imgContainerHeight
+  } = imgElement.value.getBoundingClientRect()
+  return {
+    translateX: parseInt(imgContainerX + imgContainerWidth / 2),
+    translateY: parseInt(imgContainerY + imgContainerHeight / 2)
+  }
+}
+
+/**
+ * 进入详情点击事件
+ */
+const onToPinsClick = () => {
+  emit('click', {
+    location: imgContainerCenter(),
+    data: props.data
+  })
+}
 </script>
 
 <template>
@@ -65,6 +93,7 @@ const { enter: onImgFullScreen } = useFullscreen(imgElement)
       :style="{
         backgroundColor: randomRGB()
       }"
+      @click="onToPinsClick"
     >
       <!-- 图片 -->
       <img
