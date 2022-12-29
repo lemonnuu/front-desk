@@ -99,6 +99,9 @@ const onBtnClick = () => {
   <button
     class="text-sm text-center rounded duration-150 flex justify-center items-center"
     :class="[typeEnum[type], sizeEnum[sizeKey].button, { 'active:scale-105': isActiveAnim }]"
+    :style="{
+      'pointer-events': loading ? 'none' : 'auto'
+    }"
     @click.stop="onBtnClick"
   >
     <!-- loading -->

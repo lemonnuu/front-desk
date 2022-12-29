@@ -15,7 +15,9 @@ const DELAY_TIME = 200
 </script>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, ref, watch, useSlots } from 'vue'
+
+const slots = useSlots()
 
 const props = defineProps({
   placement: {
@@ -35,6 +37,7 @@ const isVisable = ref(false)
 // 鼠标移入触发
 let timeout = null
 const onHandleMouseEnter = () => {
+  if (!slots.default) return
   isVisable.value = true
   if (timeout) {
     clearTimeout(timeout)
@@ -99,6 +102,7 @@ watch(isVisable, (val) => {
     <!-- 气泡展示 -->
     <Transition name="slide">
       <div
+        v-if="slots.default"
         ref="contentTarget"
         v-show="isVisable"
         class="absolute p-1 z-20 bg-white dark:bg-zinc-900 border rounded-md dark:border-zinc-700"

@@ -12,7 +12,7 @@ import HeaderTheme from './HeaderTheme.vue'
       <img
         v-lazy
         class="guide-home h-4 cursor-pointer mr-2"
-        src="https://m.imooc.com/static/wap/static/common/img/logo-small@2x.png"
+        src="../../../../assets/logo.png"
         alt=""
       />
       <header-search class="mr-1"></header-search>
