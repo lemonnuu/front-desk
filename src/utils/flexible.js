@@ -16,9 +16,7 @@ export const isMobileTerminal = computed(() => {
  * 真正的判断当前设备是否为移动设备
  */
 export const realIsMobileTerminal = computed(() => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 })
 
 /**

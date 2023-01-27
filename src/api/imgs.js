@@ -90,7 +90,7 @@ export const getImgApiCosWithWH = async (imgCount) => {
     imgListPromiseArr.push(getCosImg())
   }
   const imgList = (await Promise.all(imgListPromiseArr)).map((item, index) => {
-    const title = item.imgurl.split('img.pigpig.in/img/')[1].split('/')[0]
+    const title = item.imgurl.split('img.pigpig.in/imgapi.cn/')[1].split('/')[0]
     return {
       id: item.imgurl + index + Date.now(),
       photo: item.imgurl,

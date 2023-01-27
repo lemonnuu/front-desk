@@ -4,6 +4,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
+// TODO: 根据环境使用不同的代理
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
