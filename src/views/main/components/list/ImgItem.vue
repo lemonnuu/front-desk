@@ -6,6 +6,7 @@ import { transformImgfromSrc, downloadResource } from '../../../../utils/downloa
 import { message } from '../../../../libs'
 import { saveAs } from 'file-saver'
 import { useFullscreen } from '@vueuse/core'
+import { downloadBaseUrl } from '../../../../constants'
 
 const props = defineProps({
   data: {
@@ -43,7 +44,9 @@ const onHandleDownload = async () => {
   const suffix = tempArr[tempArr.length - 1]
   if (saveAs) {
     // 可以使用 file-saver 库, 和下面自己写的是一样的原理, 也不支持跨域的图片
-    saveAs(imgElement.value.src, `${props.data.title}.${suffix}`)
+    // saveAs(imgElement.value.src, `${props.data.title}.${suffix}`)
+    const baseUrl = `${downloadBaseUrl}?imgurl=${imgElement.value.src}`
+    saveAs(baseUrl, `${props.data.title}.${suffix}`)
   } else {
     // 只有每日 bing 图可以下载, 其它的跨域了, 就这样吧, 到时候可能还得开发个服务器, 唉, 到时候再说
     const blobUrl = await transformImgfromSrc(imgElement.value.src).catch((err) => {
