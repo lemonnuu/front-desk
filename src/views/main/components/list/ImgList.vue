@@ -1,12 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import {
-  getImgApiLsit,
-  getImgApiCosWithWH,
-  getImgApiCosNoWH,
-  getBingImgList,
-  getQQInfo
-} from '../../../../api/imgs'
+import { getImgApiLsit, getQQInfo } from '../../../../api/imgs'
 import WaterFall from '../../../../libs/WaterFall.vue'
 import ImgItem from './ImgItem.vue'
 import { isMobileTerminal } from '../../../../utils/flexible'
@@ -14,7 +8,7 @@ import InfiniteList from '../../../../libs/InfiniteList.vue'
 import { useApiStore } from '../../../../stores/api'
 import { useDetailStore } from '../../../../stores/detail'
 import { useSearchTextStore } from '../../../../stores/searchText'
-import { CATEGORY } from '../../../../constants'
+import { CATEGORY, ALL_CATEGORY_ITEM } from '../../../../constants'
 import PinsComponent from '../../../pins/components/PinsComponent.vue'
 import gsap from 'gsap'
 import { useEventListener } from '@vueuse/core'
@@ -30,6 +24,12 @@ const isFinished = ref(false)
 // 数据源
 const imgList = ref([])
 
+const params = {
+  category: 'random',
+  count: 10,
+  format: 'json'
+}
+
 const getImgList = async () => {
   // 数据全部加载完成直接 return
   if (isFinished.value) return
@@ -40,27 +40,9 @@ const getImgList = async () => {
     return searchModeFunc()
   }
 
-  let res = []
-  switch (apiStore.currentCategory.id) {
-    case CATEGORY.COS:
-      res = (await getCosListWithWH()) || (await getCosListNoWH())
-      break
-    case CATEGORY.BEAUTY:
-      res = await getParamsImgList()
-      break
-    case CATEGORY.CARTOON:
-      res = await getParamsImgList()
-      break
-    case CATEGORY.LANDSCAPE:
-      res = await getParamsImgList()
-      break
-    case CATEGORY.BING:
-      res = await getBingImgList()
-      isFinished.value = true
-      break
-    default:
-      res = await getParamsImgList()
-      break
+  const res = await getImgApiLsit(params)
+  if (apiStore.currentCategory.id === CATEGORY.BING) {
+    isFinished.value = true
   }
   imgList.value.push(...res)
 
@@ -72,26 +54,7 @@ const getImgList = async () => {
   // 修改 loading 标记, 得和 waterfall 耦合了, 定位没好之前就得是 loadering
   // loading.value = false
 
-  console.log(res)
-}
-
-const params = {
-  fl: 'suiji'
-}
-
-// 获取 真人 | 动漫 | 风景 图片
-const getParamsImgList = async () => {
-  return await getImgApiLsit(params, 10)
-}
-
-// 获取有宽高值的 Cos 图片列表
-const getCosListWithWH = async () => {
-  return await getImgApiCosWithWH(10)
-}
-
-// 获取没有宽高值的 Cos 图片列表
-const getCosListNoWH = async () => {
-  return await getImgApiCosNoWH()
+  console.log('图片数据', res)
 }
 
 const isPicturePreReading = computed(() => {
@@ -110,20 +73,11 @@ const resetImgList = () => {
   isFinished.value = false
   imgList.value = []
   currentSearchCount = ''
-  switch (apiStore.currentCategory.id) {
-    case CATEGORY.BEAUTY:
-      params.fl = 'meizi'
-      break
-    case CATEGORY.CARTOON:
-      params.fl = 'dongman'
-      break
-    case CATEGORY.LANDSCAPE:
-      params.fl = 'fengjing'
-      break
-    default:
-      params.fl = 'suiji'
-      break
+  params.category = apiStore.currentCategory.id
+  if (apiStore.currentCategory.id === ALL_CATEGORY_ITEM.id) {
+    params.category = 'random'
   }
+  params.count = apiStore.currentCategory.id === CATEGORY.BING ? 8 : 10
 }
 
 /**

@@ -4,8 +4,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
-// TODO: 根据环境使用不同的代理
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -25,24 +23,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://www.fastmock.site/mock/f4f4ee7dc2f219848cbddc33ac4ea3cb/front-desk',
-        changeOrigin: true
-      },
-      // imgapi 调用接口
-      '/imgapi': {
-        target: 'https://imgapi.cn',
+        target: 'http://127.0.0.1:3000/api/v1',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/imgapi/, '')
-      },
-      '/likepoems': {
-        target: 'https://api.likepoems.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/likepoems/, '')
-      },
-      '/usuuu': {
-        target: 'https://api.usuuu.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/usuuu/, '')
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

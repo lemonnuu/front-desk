@@ -12,7 +12,7 @@
         <p
           class="absolute bottom-0 left-0 w-full h-[45%] flex items-center backdrop-blur rounded px-1 text-white text-xs duration-300 hover:backdrop-blur-none"
         >
-          # {{ themeData.big.author }}
+          # {{ themeData.big.title }}
         </p>
       </div>
       <div class="flex flex-wrap flex-1 max-w-[860px]">
@@ -28,7 +28,7 @@
           <p
             class="backdrop-blur absolute top-0 left-0 w-full h-full flex items-center px-1 rounded cursor-pointer duration-300 hover:backdrop-blur-none"
           >
-            # {{ item.author }}
+            # {{ item.title }}
           </p>
         </div>
       </div>

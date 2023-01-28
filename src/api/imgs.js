@@ -1,33 +1,64 @@
-import { imgApiService, likepoemsService, usuuuService } from '../utils/request'
+import request from '../utils/request'
 import randomName from '../utils/randomName'
+import { CATEGORY } from '../constants'
 
-/**
- * 获取一张真人/动漫/风景调用
- * params：
- * zd	否	string	输出壁纸的终端[mobile|pc|zsy] 为空输出pc 竖图|横图|自适应
- * fl	否	string	选择输出分类[meizi|dongman|fengjing|suiji] 为空随机输出
- * gs	否	string	输出壁纸格式[json|images] 默认为images
- */
-const getImg = (otherParams) => {
-  return imgApiService({
-    url: '/api.php',
+export const getImgApiLsit = async (params = { category: 'suiji', count: 1 }) => {
+  let data = await request({
+    url: '/images',
+    params
+  })
+  if (!Array.isArray(data)) {
+    data = data ? [data] : []
+  }
+  const sentenceData = await request({
+    url: '/sentence',
     params: {
-      zd: 'zsy',
-      gs: 'json',
-      ...otherParams
+      count: params.count
     }
   })
+  const res = data.map((item, index) => {
+    let author = randomName()
+    let title = sentenceData[index]
+    if (item.detail) {
+      if (params.category === CATEGORY.BING) {
+        const temp = item.detail.split('(')
+        author = temp[1].replace(')', '').trim()
+        title = temp[0].trim()
+      } else {
+        const temp = item.detail.split(' ')
+        author = temp[0].replace('一', '')
+        title = temp[temp.length - 1].replace('一', '')
+      }
+    }
+    return {
+      id: item.imgurl + index + Date.now(),
+      photo: item.imgurl,
+      title,
+      author,
+      avatar: item.imgurl,
+      photoWidth: item.width,
+      photoHeight: item.height
+    }
+  })
+  return res
+}
+
+export const getBingImgList = async () => {
+  const res = await getImgApiLsit({
+    count: 8,
+    category: 'bing',
+    format: 'json'
+  })
+  console.log('=======', res)
+  return res
 }
 
 /**
- * 获取一条毒鸡汤
+ * 获取 QQ 信息
  */
-const getDujitang = () => {
-  return likepoemsService({
-    url: '/ana/yiyan/',
-    params: {
-      type: 'json'
-    }
+export const getQQInfo = async (qq) => {
+  return await request({
+    url: `/images/qq/${qq}`
   })
 }
 
@@ -36,158 +67,12 @@ const getDujitang = () => {
  */
 export const getSearchHint = async () => {
   console.log('搜索提示接口触发')
-  const sentenceListPromiseArr = []
   const randomCount = Math.floor(Math.random() * 7) + 1
-  for (let i = 0; i < randomCount; i++) {
-    sentenceListPromiseArr.push(getDujitang())
-  }
-  return await Promise.all(sentenceListPromiseArr)
-}
-
-const zdArr = ['mobile', 'pc']
-
-export const getImgApiLsit = async (params = { fl: 'suiji' }, imgCount = 10) => {
-  const imgListPromiseArr = []
-  const sentenceListPromiseArr = []
-  for (let i = 0; i < (imgCount || 1); i++) {
-    params.zd = zdArr[Math.floor(Math.random() * 2)]
-    imgListPromiseArr.push(getImg(params))
-    sentenceListPromiseArr.push(getDujitang())
-  }
-  const sentenceList = await Promise.all(sentenceListPromiseArr)
-  const imgList = (await Promise.all(imgListPromiseArr)).map((item, index) => {
-    return {
-      id: item.imgurl + index + Date.now(),
-      photo: item.imgurl,
-      title: sentenceList[index],
-      author: randomName(),
-      avatar: item.imgurl,
-      photoWidth: item.width,
-      photoHeight: item.height
-    }
-  })
-  return imgList
-}
-
-/**
- * 获取一张 Cos 图片
- */
-const getCosImg = () => {
-  return imgApiService({
-    url: '/cos.php',
+  const sentenceData = await request({
+    url: '/sentence',
     params: {
-      return: 'json'
+      count: randomCount
     }
   })
-}
-
-/**
- * 获取 Cos 图片数据列表, 这里自己拼接个数, 会返回宽高, 不需要计算宽高
- */
-export const getImgApiCosWithWH = async (imgCount) => {
-  const imgListPromiseArr = []
-  for (let i = 0; i < (imgCount || 1); i++) {
-    imgListPromiseArr.push(getCosImg())
-  }
-  const imgList = (await Promise.all(imgListPromiseArr)).map((item, index) => {
-    const title = item.imgurl.split('img.pigpig.in/imgapi.cn/')[1].split('/')[0]
-    return {
-      id: item.imgurl + index + Date.now(),
-      photo: item.imgurl,
-      title,
-      author: title.split(' ')[0],
-      avatar: item.imgurl,
-      photoWidth: item.width,
-      photoHeight: item.height
-    }
-  })
-  return imgList
-}
-
-/**
- * 获取 Cos 图片数据列表, 不会返回宽高, 只有十条数据
- */
-export const getImgApiCosNoWH = async () => {
-  const { imgurls } = await imgApiService({
-    url: '/cos.php',
-    params: {
-      return: 'jsonpro'
-    }
-  })
-  const imgList = imgurls.map((item, index) => {
-    const title = item.split('img.pigpig.in/img/')[1].split('/')[0]
-    return {
-      id: item + index + Date.now(),
-      photo: item,
-      title,
-      author: title.split(' ')[0],
-      avatar: item
-    }
-  })
-  return imgList
-}
-
-/**
- * 获取一张 bing 图
- */
-const getBingImg = (otherParams) => {
-  return imgApiService({
-    url: '/bing.php',
-    params: {
-      info: true,
-      ...otherParams
-    }
-  })
-}
-
-export const getBingImgList = async () => {
-  const imgListPromiseArr = []
-  for (let i = 1; i <= 7; i++) {
-    // 过去 7 天的每日 bing 图
-    imgListPromiseArr.push(getBingImg({ day: i }))
-  }
-  const imgList = (await Promise.all(imgListPromiseArr)).map((item, index) => {
-    const arr = item.split(',')
-    const title = arr[0].split('title:')[1]
-    const url = arr[1].split('url:')[1]
-    const time = arr[3].split('time:')[1].replace('}', '')
-    const temp = url.split('_')
-    const widthAndHeight = temp[temp.length - 1].split('.')[0].split('x')
-    return {
-      id: time + index + Date.now(),
-      photo: url,
-      title: title,
-      author: time,
-      avatar: url,
-      photoWidth: widthAndHeight[0],
-      photoHeight: widthAndHeight[1]
-    }
-  })
-  return imgList
-}
-
-/**
- * 随机 loading 图片
- */
-export const getLoadingImg = async () => {
-  const { imgurl, width, height } = await imgApiService({
-    url: '/loading.php',
-    params: {
-      return: 'json'
-    }
-  })
-  return {
-    photo: imgurl,
-    photoWidth: width,
-    photoHeight: height
-  }
-}
-
-/**
- * 获取 QQ 信息
- */
-export const getQQInfo = async (qq) => {
-  return await usuuuService({
-    url: `/qq/${qq}`
-  })
+  return sentenceData
 }

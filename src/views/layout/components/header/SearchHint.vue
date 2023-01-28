@@ -18,8 +18,19 @@ const emit = defineEmits(['onClickItem'])
 const hintData = ref([])
 const getHintData = async () => {
   if (!props.searchText || props.searchText.length > 11) return
-  hintData.value = (await getSearchHint()).map((item) => props.searchText + ' ' + item)
-  console.log(hintData.value)
+  const randomCount = Math.floor(Math.random() * 7) + 1
+  const res = new Set()
+  const maxSize = 11 - props.searchText.length
+  if (maxSize) {
+    for (let i = 0; i < randomCount; i++) {
+      const random = Math.floor(Math.random() * maxSize) + 1
+      const suffix = Math.floor(Math.random() * 10 ** random)
+      res.add(props.searchText + suffix)
+    }
+    hintData.value = [...res]
+  } else {
+    hintData.value = []
+  }
 }
 
 watchDebounced(() => props.searchText, getHintData, {
