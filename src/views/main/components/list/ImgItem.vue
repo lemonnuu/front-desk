@@ -7,6 +7,7 @@ import { message } from '../../../../libs'
 import { saveAs } from 'file-saver'
 import { useFullscreen } from '@vueuse/core'
 import { downloadBaseUrl } from '../../../../constants'
+import { useUserStore } from '../../../../stores/user'
 
 const props = defineProps({
   data: {
@@ -23,6 +24,8 @@ const props = defineProps({
     default: true
   }
 })
+
+const userStore = useUserStore()
 
 const emit = defineEmits(['click'])
 
@@ -87,6 +90,13 @@ const onToPinsClick = () => {
     data: props.data
   })
 }
+
+const onClickShare = () => {
+  if (!userStore.token) {
+    return message('warn', '请先登录', 2000)
+  }
+  message('warn', '正在努力升级中....', 2000)
+}
 </script>
 
 <template>
@@ -112,12 +122,13 @@ const onToPinsClick = () => {
         class="hidden opacity-0 w-full h-full bg-zinc-900/50 absolute top-0 left-0 rounded duration-300 group-hover:opacity-100 xl:block"
       >
         <!-- 分享 -->
-        <ComBtn class="absolute top-1.5 left-1.5">分享</ComBtn>
+        <ComBtn class="absolute top-1.5 left-1.5" @click="onClickShare">分享</ComBtn>
         <!-- 点赞 -->
         <ComBtn
           class="absolute top-1.5 right-1.5"
           type="info"
           icon="heart"
+          @click="onClickShare"
           icon-class="fill-zinc-900 dark:fill-zinc-200"
         ></ComBtn>
         <!-- 下载 -->

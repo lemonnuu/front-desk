@@ -13,6 +13,21 @@ export const validateUsername = (value) => {
 }
 
 /**
+ * 邮箱的表单校验
+ */
+export const validateEmail = (value) => {
+  if (!value) {
+    return '邮箱为必填的'
+  }
+
+  if (!/^[A-Za-z0-9-_\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(value)) {
+    return '请输入正确的邮箱'
+  }
+
+  return true
+}
+
+/**
  * 密码的表单校验
  */
 export const validatePassword = (value) => {

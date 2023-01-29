@@ -16,4 +16,8 @@ export const CATEGORY = {
   BING: 'bing'
 }
 
+// 图片转接接口, 以免跨域
 export const downloadBaseUrl = 'http://127.0.0.1:3000/api/v1/images/download'
+
+// 登录方式
+export const LOGIN_TYPE_USERNAME = 'username'

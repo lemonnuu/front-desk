@@ -3,11 +3,18 @@ import { ref } from 'vue'
 import LoginHeader from './components/LoginHeader.vue'
 import SliderCaptcha from './components/SliderCaptcha.vue'
 import { Form as VeeForm, Field as VeeField, ErrorMessage as VeeErrorMessage } from 'vee-validate'
-import { validateUsername, validatePassword } from './validate'
+import { validateEmail, validatePassword } from './validate'
 import ComBtn from '../../libs/ComBtn.vue'
+import { LOGIN_TYPE_USERNAME } from '../../constants'
+import { useUserStore } from '../../stores/user'
+import { useRouter } from 'vue-router'
+import { message } from '../../libs'
+
+const userStore = useUserStore()
+const router = useRouter()
 
 const loginForm = ref({
-  username: '',
+  email: '',
   password: ''
 })
 
@@ -27,15 +34,27 @@ const onLoginHandler = () => {
 }
 
 // 去注册
-const onToRegister = () => {}
+const onToRegister = () => {
+  message('warn', '功能暂未开放, 敬请期待', 2000)
+}
 
 /**
  * 登录行为
  */
 const loading = ref(false)
-const onLogin = () => {
+const onLogin = async () => {
   loading.value = true
-  console.log('登录行为')
+  let res = false
+  try {
+    res = await userStore.login({
+      ...loginForm.value,
+      loginType: LOGIN_TYPE_USERNAME
+    })
+  } finally {
+    loading.value = false
+  }
+  if (!res) return
+  router.push('/')
 }
 </script>
 
@@ -54,14 +73,14 @@ const onLogin = () => {
       <vee-form @submit="onLoginHandler">
         <vee-field
           class="dark:bg-zinc-800 dark:text-zinc-400 border-b-zinc-400 border-b-[1px] w-full outline-0 pb-1 px-1 text-base focus:border-b-main dark:focus:border-b-zinc-200 xl:dark:bg-zinc-900"
-          name="username"
-          :rules="validateUsername"
+          name="email"
+          :rules="validateEmail"
           type="text"
-          placeholder="用户名"
+          placeholder="邮箱"
           autocomplete="on"
-          v-model="loginForm.username"
+          v-model="loginForm.email"
         />
-        <vee-error-message class="text-sm text-red-600 block mt-0.5 text-left" name="username">
+        <vee-error-message class="text-sm text-red-600 block mt-0.5 text-left" name="email">
         </vee-error-message>
         <vee-field
           class="dark:bg-zinc-800 dark:text-zinc-400 border-b-zinc-400 border-b-[1px] w-full outline-0 pb-1 px-1 text-base focus:border-b-main dark:focus:border-b-zinc-200 xl:dark:bg-zinc-900"

@@ -5,6 +5,7 @@ import Driver from 'driver.js'
 import 'driver.js/dist/driver.min.css'
 import { onMounted } from 'vue'
 import steps from '../../../utils/step'
+import { message } from '../../../libs'
 
 // 初始化 Driver, 引导页用的
 let driver = null
@@ -28,7 +29,9 @@ const onHandleGuideClick = () => {
   driver.start()
 }
 
-const onToFeedback = () => {}
+const onToFeedback = () => {
+  message('warn', '功能暂未开放, 敬请期待', 2000)
+}
 </script>
 
 <template>
