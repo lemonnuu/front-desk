@@ -4,8 +4,11 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
+const developmentMode = process.env.NODE_ENV === 'development'
+
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: developmentMode ? '/' : '/mito',
   plugins: [
     vue(),
     createSvgIconsPlugin({
