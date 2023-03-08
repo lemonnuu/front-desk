@@ -1,7 +1,9 @@
 export default {
   install(app) {
     // import.meta.globEager 为同步导入
-    const directives = import.meta.globEager('./*.js')
+    // const directives = import.meta.globEager('./*.js') // globEager 已弃用
+    const directives = import.meta.glob('./*.js', { eager: true })
+    console.log('directives', directives)
     for (const [key, value] of Object.entries(directives)) {
       // 拼接组件注册的 name
       console.log(key, value)

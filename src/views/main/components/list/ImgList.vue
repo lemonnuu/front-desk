@@ -148,7 +148,8 @@ const onToPins = (item) => {
     .replaceAll('https://', '')
     .replaceAll('/', '-')
     .replaceAll('.', '_')
-  history.pushState(null, null, `${import.meta.env.BASE_URL}/pins/${virtualID}`)
+  let baseUrl = import.meta.env.BASE_URL === '/' ? '' : import.meta.env.BASE_URL
+  history.pushState(null, null, `${baseUrl}/pins/${virtualID}`)
   isVisiblePins.value = true
   currentPins.value = item
 

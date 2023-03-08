@@ -7,7 +7,7 @@ export default {
   install(app) {
     // 1. 获取所有的组件
     const components = import.meta.glob('./*.vue')
-    console.log(components)
+    console.log('components', components)
     // 2. 遍历组件模块
     for (const [fullPath, fn] of Object.entries(components)) {
       // 3. 通过 defineAsyncComponent 异步导入指定路径下的组件
